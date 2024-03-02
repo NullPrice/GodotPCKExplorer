@@ -100,8 +100,8 @@ namespace GodotPCKExplorer
         public static bool PackFiles(string outPck, bool embed, IEnumerable<PCKPackerFile> files, PCKVersion godotVersion, string packPathPrefix = "", uint alignment = 16, byte[]? encKey = null, bool encrypt_index = false, bool encrypt_files = false, CancellationToken? cancellationToken = null)
         {
             byte[]? EncryptionKey = encKey;
-            bool EncryptIndex = false;
-            bool EncryptFiles = false;
+            bool EncryptIndex = encrypt_index;
+            bool EncryptFiles = encrypt_files;
             packPathPrefix = packPathPrefix.Replace("\\", "/");
 
             const string baseOp = "Pack files";
@@ -132,14 +132,14 @@ namespace GodotPCKExplorer
                 }
             }
 
-            // if (EncryptionKey == null)
-            // {
-            //     if (EncryptIndex || EncryptFiles)
-            //     {
-            //         PCKActions.progress?.ShowMessage("The encryption key is not specified, although the encryption mode is activated.", "Error", MessageType.Error);
-            //         return false;
-            //     }
-            // }
+            if (EncryptionKey == null)
+            {
+                if (EncryptIndex || EncryptFiles)
+                {
+                    PCKActions.progress?.ShowMessage("The encryption key is not specified, although the encryption mode is activated.", "Error", MessageType.Error);
+                    return false;
+                }
+            }
 
             try
             {
